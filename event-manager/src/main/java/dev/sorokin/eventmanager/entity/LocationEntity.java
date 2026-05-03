@@ -1,4 +1,4 @@
-package dev.sorokin.eventmanager.model;
+package dev.sorokin.eventmanager.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "location")
-public class Location {
+public class LocationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

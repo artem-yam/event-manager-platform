@@ -1,7 +1,6 @@
 package dev.sorokin.eventmanager.api;
 
-import dev.sorokin.eventmanager.dto.LocationRequest;
-import dev.sorokin.eventmanager.dto.LocationResponse;
+import dev.sorokin.eventmanager.dto.LocationDto;
 import dev.sorokin.eventmanager.exception.ErrorMessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +19,7 @@ import java.util.List;
 @Tag(name = "Locations",
         description = "Location CRUD and capacity constraints")
 @RequestMapping("/locations")
-public interface LocationApi {
+public interface LocationApiContract {
 
     /**
      * Получить список всех локаций
@@ -38,7 +37,7 @@ public interface LocationApi {
                     """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Список всех локаций",
-                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = LocationResponse.class)))),
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = LocationDto.class)))),
                     @ApiResponse(responseCode = "401", description = "Аутентификация отсутствует или не удалась",
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class))),
                     @ApiResponse(responseCode = "403", description = "У пользователя недостаточно прав",
@@ -47,7 +46,7 @@ public interface LocationApi {
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class)))
             }
     )
-    ResponseEntity<List<LocationResponse>> getAll();
+    ResponseEntity<List<LocationDto>> getAll();
 
     /**
      * Создать новую локацию
@@ -66,11 +65,11 @@ public interface LocationApi {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные новой локации",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = LocationRequest.class))
+                    content = @Content(schema = @Schema(implementation = LocationDto.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Место успешно создано",
-                            content = @Content(schema = @Schema(implementation = LocationResponse.class))),
+                            content = @Content(schema = @Schema(implementation = LocationDto.class))),
                     @ApiResponse(responseCode = "400", description = "Запрос с невалидными данными",
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Аутентификация отсутствует или не удалась",
@@ -81,7 +80,7 @@ public interface LocationApi {
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class)))
             }
     )
-    ResponseEntity<LocationResponse> create(@Valid @RequestBody LocationRequest request);
+    ResponseEntity<LocationDto> create(@Valid @RequestBody LocationDto request);
 
     /**
      * Получить локацию по ID
@@ -107,7 +106,7 @@ public interface LocationApi {
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Успешный ответ",
-                            content = @Content(schema = @Schema(implementation = LocationResponse.class))),
+                            content = @Content(schema = @Schema(implementation = LocationDto.class))),
                     @ApiResponse(responseCode = "400", description = "Некорректный запрос",
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Аутентификация отсутствует или не удалась",
@@ -120,7 +119,7 @@ public interface LocationApi {
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class)))
             }
     )
-    ResponseEntity<LocationResponse> getById(@PathVariable Long locationId);
+    ResponseEntity<LocationDto> getById(@PathVariable Long locationId);
 
     /**
      * Обновить локацию по ID
@@ -148,11 +147,11 @@ public interface LocationApi {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Новые данные локации",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = LocationRequest.class))
+                    content = @Content(schema = @Schema(implementation = LocationDto.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Место успешно обновлено",
-                            content = @Content(schema = @Schema(implementation = LocationResponse.class))),
+                            content = @Content(schema = @Schema(implementation = LocationDto.class))),
                     @ApiResponse(responseCode = "400", description = "Некорректный запрос",
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class))),
                     @ApiResponse(responseCode = "401", description = "Аутентификация отсутствует или не удалась",
@@ -165,7 +164,7 @@ public interface LocationApi {
                             content = @Content(schema = @Schema(implementation = ErrorMessageResponse.class)))
             }
     )
-    ResponseEntity<LocationResponse> update(@PathVariable Long locationId, @Valid @RequestBody LocationRequest request);
+    ResponseEntity<LocationDto> update(@PathVariable Long locationId, @Valid @RequestBody LocationDto request);
 
     /**
      * Удалить локацию по ID

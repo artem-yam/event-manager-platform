@@ -1,7 +1,6 @@
 package dev.sorokin.eventmanager.service;
 
-import dev.sorokin.eventmanager.dto.LocationRequest;
-import dev.sorokin.eventmanager.dto.LocationResponse;
+import dev.sorokin.eventmanager.dto.LocationDto;
 import dev.sorokin.eventmanager.mapper.LocationMapper;
 import dev.sorokin.eventmanager.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,23 +18,23 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
 
-    public List<LocationResponse> getAll() {
+    public List<LocationDto> getAll() {
         return locationMapper.toDtoList(locationRepository.findAll());
     }
 
-    public LocationResponse create(LocationRequest dto) {
-        var entity = locationMapper.toEntity(dto);
+    public LocationDto create(LocationDto dto) {
+        var entity = locationMapper.createEntity(dto);
         var saved = locationRepository.save(entity);
         return locationMapper.toDto(saved);
     }
 
-    public LocationResponse getById(Long locationId) {
+    public LocationDto getById(Long locationId) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
         return locationMapper.toDto(entity);
     }
 
-    public LocationResponse update(Long locationId, LocationRequest dto) {
+    public LocationDto update(Long locationId, LocationDto dto) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
         locationMapper.updateEntity(entity, dto);

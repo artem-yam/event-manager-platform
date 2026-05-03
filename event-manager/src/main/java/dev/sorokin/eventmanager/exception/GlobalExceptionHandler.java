@@ -17,12 +17,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ErrorMessageResponse> handleValidation(MethodArgumentNotValidException ex) {
-//        var body = new ErrorMessageResponse("Bad request", ex.getMessage(), LocalDateTime.now());
-//        return ResponseEntity.badRequest().body(body);
-//    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessageResponse> handleValidation(MethodArgumentNotValidException ex) {
         log.warn("Ошибка валидации: {}", ex.getMessage());
