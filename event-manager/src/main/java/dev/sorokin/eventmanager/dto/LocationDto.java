@@ -13,19 +13,19 @@ import lombok.Value;
 public class LocationDto {
 
     @NotNull
-    @Schema(example = "КТ Октябрь")
+    @Schema(description = "Имя локации", example = "КТ Октябрь")
     String name;
 
     @NotNull
-    @Schema(example = "улица Пушкина")
+    @Schema(description = "Адрес локации", example = "улица Пушкина")
     String address;
 
     @NotNull
     @Min(5)
-    @Schema(example = "1000")
+    @Schema(description = "Вместительность локации", example = "1000")
     Integer capacity;
 
-    @Schema(example = "Тестовое описание")
+    @Schema(description = "Дополнительное описание локации", example = "Тестовое описание")
     String description;
 
 }

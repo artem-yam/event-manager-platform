@@ -29,3 +29,11 @@ springdoc:
   swagger-ui:
     path: /index.html
     #url: openapi/event-manager-openapi.yaml
+    tryItOutEnabled: true
+    persistAuthorization: true
+    withCredentials: true
+
+
+jwt:
+  ttl: 86400000
+  key: 'd878fede59078e89bcf10c2c5eb43d760c426035362af8caa237eda1671e14e0'
