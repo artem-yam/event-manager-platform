@@ -6,8 +6,11 @@ import dev.sorokin.eventmanager.dto.UserRegistrationDto;
 import dev.sorokin.eventmanager.mapper.UserMapper;
 import dev.sorokin.eventmanager.repository.UserRepository;
 import dev.sorokin.eventmanager.security.jwt.JwtService;
+import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
@@ -16,16 +19,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Setter
 public class UserService {
 
-    private static final String USER_NOT_FOUND_MESSAGE = "Не найден пользователь с id %s";
-    private static final String LOGIN_TAKEN_MESSAGE = "Пользователь с таким логином уже существует";
+    @Value("${validation.messages.user_not_found}")
+    private String USER_NOT_FOUND_MESSAGE;
+    @Value("${validation.messages.user_login_taken}")
+    private String LOGIN_TAKEN_MESSAGE;
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ValidationService validationService;
 
     public String auth(UserCredentialsDto user) {
         var authentication = authenticationManager.authenticate(
@@ -42,7 +49,8 @@ public class UserService {
             throw new IllegalArgumentException(LOGIN_TAKEN_MESSAGE);
         }
 
-        var userEntity = userMapper.createEntity(request);
+        validationService.validateUser(request);
+        var userEntity = userMapper.createNewEntity(request);
         var passwordHash = passwordEncoder.encode(request.getPassword());
         userEntity.setPasswordHash(passwordHash);
 

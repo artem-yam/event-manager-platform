@@ -3,6 +3,7 @@ package dev.sorokin.eventmanager.service;
 import dev.sorokin.eventmanager.dto.LocationDto;
 import dev.sorokin.eventmanager.mapper.LocationMapper;
 import dev.sorokin.eventmanager.repository.LocationRepository;
+import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,14 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
+    private final ValidationService validationService;
 
     public List<LocationDto> getAll() {
         return locationMapper.toDtoList(locationRepository.findAll());
     }
 
     public LocationDto create(LocationDto dto) {
+        validationService.validateLocation(dto);
         var entity = locationMapper.createEntity(dto);
         var saved = locationRepository.save(entity);
         return locationMapper.toDto(saved);
@@ -37,6 +40,7 @@ public class LocationService {
     public LocationDto update(Long locationId, LocationDto dto) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+        validationService.validateLocation(dto);
         locationMapper.updateEntity(entity, dto);
         locationRepository.save(entity);
         return locationMapper.toDto(entity);

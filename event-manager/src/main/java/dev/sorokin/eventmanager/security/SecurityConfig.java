@@ -43,20 +43,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequest ->
                                 authorizeHttpRequest
                                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                                .requestMatchers(HttpMethod.POST, "/users").permitAll()
-//                                .requestMatchers(HttpMethod.POST, "/users/auth").permitAll()
-//                                        .requestMatchers(HttpMethod.GET, "/users/{userId}").hasAuthority("ADMIN")
-//                                .requestMatchers(HttpMethod.POST, "/locations").hasAuthority("ADMIN")
-//                                .requestMatchers(HttpMethod.DELETE, "/locations/{locationId}").hasAuthority("ADMIN")
-//                                .requestMatchers(HttpMethod.PUT, "/locations/{locationId}").hasAuthority("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/locations/**").hasAnyAuthority("ADMIN", "USER")
                                         .requestMatchers(HttpMethod.GET, "/users/{userId}").hasAuthority("ADMIN")
                                         .requestMatchers("/users/**").permitAll()
-//                                        .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/locations/**").hasAnyAuthority("ADMIN", "USER")
                                         .requestMatchers("/locations/**").hasAnyAuthority("ADMIN")
                                         .anyRequest().authenticated()
-//                                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

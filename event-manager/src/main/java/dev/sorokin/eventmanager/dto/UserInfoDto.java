@@ -2,6 +2,7 @@ package dev.sorokin.eventmanager.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
@@ -12,7 +13,7 @@ public class UserInfoDto {
     @Schema(description = "Уникальный идентификатор пользователя", example = "12345")
     Long id;
 
-    @NotNull
+    @NotBlank
     @Schema(description = "Уникальный логин пользователя", example = "test_user")
     String login;
 

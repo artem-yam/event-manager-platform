@@ -3,6 +3,7 @@ package dev.sorokin.eventmanager.dto;
 import dev.sorokin.eventmanager.entity.LocationEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
@@ -12,11 +13,11 @@ import lombok.Value;
 @Value
 public class LocationDto {
 
-    @NotNull
+    @NotBlank
     @Schema(description = "Имя локации", example = "КТ Октябрь")
     String name;
 
-    @NotNull
+    @NotBlank
     @Schema(description = "Адрес локации", example = "улица Пушкина")
     String address;
 
