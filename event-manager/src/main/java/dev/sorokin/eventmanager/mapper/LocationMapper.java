@@ -17,9 +17,11 @@ public interface LocationMapper {
     LocationDto toDto(LocationEntity locationEntity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "events", ignore = true)
     LocationEntity createEntity(LocationDto locationDto);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "events", ignore = true)
     void updateEntity(@MappingTarget LocationEntity entity, LocationDto locationDto);
 
 }

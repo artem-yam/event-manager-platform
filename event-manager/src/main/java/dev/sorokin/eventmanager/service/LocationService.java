@@ -1,11 +1,14 @@
 package dev.sorokin.eventmanager.service;
 
 import dev.sorokin.eventmanager.dto.LocationDto;
+import dev.sorokin.eventmanager.entity.EventEntity;
+import dev.sorokin.eventmanager.entity.LocationEntity;
 import dev.sorokin.eventmanager.mapper.LocationMapper;
 import dev.sorokin.eventmanager.repository.LocationRepository;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LocationService {
 
-    private static final String LOCATION_NOT_FOUND_MESSAGE = "Не найдена локация с id %s";
+    @Value("${validation.messages.location.not_found}")
+    private String LOCATION_NOT_FOUND_MESSAGE;
+    @Value("${validation.messages.location.with_events}")
+    private String LOCATION_WITH_EVENTS_MESSAGE;
 
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
@@ -37,19 +43,29 @@ public class LocationService {
         return locationMapper.toDto(entity);
     }
 
+    protected LocationEntity getEntityById(Long locationId) {
+        return locationRepository.findById(locationId)
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+    }
+
     public LocationDto update(Long locationId, LocationDto dto) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
-        validationService.validateLocation(dto);
+        validationService.validateLocation(countEventPlaces(entity.getEvents()), dto);
         locationMapper.updateEntity(entity, dto);
         locationRepository.save(entity);
         return locationMapper.toDto(entity);
     }
 
+    private Integer countEventPlaces(List<EventEntity> events) {
+        return events.stream().mapToInt(EventEntity::getMaxPlaces).sum();
+    }
+
     public void delete(Long locationId) {
-        boolean exists = locationRepository.existsById(locationId);
-        if (!exists) {
-            throw new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId));
+        var entity = locationRepository.findById(locationId)
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+        if (!entity.getEvents().isEmpty()) {
+            throw new IllegalArgumentException(LOCATION_WITH_EVENTS_MESSAGE.formatted(locationId));
         }
 
         locationRepository.deleteById(locationId);

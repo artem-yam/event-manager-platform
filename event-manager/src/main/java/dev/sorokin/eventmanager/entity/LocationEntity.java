@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -29,5 +32,12 @@ public class LocationEntity {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(
+            mappedBy = "location",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<EventEntity> events = new ArrayList<>();
 
 }

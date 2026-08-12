@@ -1,6 +1,6 @@
 package dev.sorokin.eventmanager.controller;
 
-import dev.sorokin.eventmanager.api.LocationApiContract;
+import dev.sorokin.eventmanager.api.LocationApiContractIntrf;
 import dev.sorokin.eventmanager.dto.LocationDto;
 import dev.sorokin.eventmanager.service.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class LocationControllerContract implements LocationApiContract {
+public class LocationController implements LocationApiContractIntrf {
 
     private final LocationService locationService;
 

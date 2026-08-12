@@ -14,6 +14,8 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "registrations", ignore = true)
+    @Mapping(target = "ownedEvents", ignore = true)
     @Mapping(target = "role", constant = "USER")
     UserEntity createNewEntity(UserRegistrationDto userRegistrationDto);
 

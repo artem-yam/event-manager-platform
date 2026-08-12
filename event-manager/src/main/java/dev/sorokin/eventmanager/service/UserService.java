@@ -3,6 +3,7 @@ package dev.sorokin.eventmanager.service;
 import dev.sorokin.eventmanager.dto.UserCredentialsDto;
 import dev.sorokin.eventmanager.dto.UserInfoDto;
 import dev.sorokin.eventmanager.dto.UserRegistrationDto;
+import dev.sorokin.eventmanager.entity.UserEntity;
 import dev.sorokin.eventmanager.mapper.UserMapper;
 import dev.sorokin.eventmanager.repository.UserRepository;
 import dev.sorokin.eventmanager.security.jwt.JwtService;
@@ -22,9 +23,11 @@ import org.springframework.stereotype.Service;
 @Setter
 public class UserService {
 
-    @Value("${validation.messages.user_not_found}")
-    private String USER_NOT_FOUND_MESSAGE;
-    @Value("${validation.messages.user_login_taken}")
+    @Value("${validation.messages.user.not_found_by_id}")
+    private String USER_BY_ID_NOT_FOUND_MESSAGE;
+    @Value("${validation.messages.user.not_found_by_login}")
+    private String USER_BY_LOGIN_NOT_FOUND_MESSAGE;
+    @Value("${validation.messages.user.login_taken}")
     private String LOGIN_TAKEN_MESSAGE;
 
     private final UserRepository userRepository;
@@ -60,7 +63,13 @@ public class UserService {
 
     public UserInfoDto getUserById(Long userId) {
         var entity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE.formatted(userId)));
+                .orElseThrow(() -> new EntityNotFoundException(USER_BY_ID_NOT_FOUND_MESSAGE.formatted(userId)));
         return userMapper.toDto(entity);
+    }
+
+    protected UserEntity getActiveUser() {
+        var userLogin = jwtService.getCurrentUserLogin();
+        return userRepository.findByLogin(userLogin)
+                .orElseThrow(() -> new EntityNotFoundException(USER_BY_LOGIN_NOT_FOUND_MESSAGE.formatted(userLogin)));
     }
 }
