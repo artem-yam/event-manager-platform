@@ -1,6 +1,6 @@
 package dev.sorokin.eventmanager.controller;
 
-import dev.sorokin.eventmanager.api.UsersApiContract;
+import dev.sorokin.eventmanager.api.UsersApiContractIntrf;
 import dev.sorokin.eventmanager.dto.JwtResponse;
 import dev.sorokin.eventmanager.dto.UserCredentialsDto;
 import dev.sorokin.eventmanager.dto.UserInfoDto;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "User management endpoints")
-public class UsersController implements UsersApiContract {
+public class UsersController implements UsersApiContractIntrf {
 
     private final UserService userService;
 

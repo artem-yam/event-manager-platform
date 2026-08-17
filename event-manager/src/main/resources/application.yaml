@@ -37,12 +37,4 @@ jwt:
   ttl: 86400000
   key: 'd878fede59078e89bcf10c2c5eb43d760c426035362af8caa237eda1671e14e0'
 
-validation.messages:
-  empty_location_name: "Название локации не может быть пустым"
-  empty_location_address: "Адрес локации не может быть пустым"
-  empty_location_capacity: "Вместительность локации не может быть пустой или меньше 5"
-  empty_user_login: "Логин пользователя не может быть пустым"
-  empty_user_password: "Пароль пользователя не может быть пустым"
-  empty_user_age: "Возраст пользователя не может быть пустой или меньше 18"
-  user_not_found: "Не найден пользователь с id %s"
-  user_login_taken: "Пользователь с таким логином уже существует"
+event.status.cron: 0 * * * * *

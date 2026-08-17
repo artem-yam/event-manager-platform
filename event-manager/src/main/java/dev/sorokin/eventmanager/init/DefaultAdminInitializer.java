@@ -19,6 +19,6 @@ public class DefaultAdminInitializer {
         if (userRepository.existsByLogin("admin")) {
             return;
         }
-        userRepository.save(new UserEntity(null, "admin", 30, encoder.encode("admin"), "ADMIN"));
+        userRepository.save(new UserEntity("admin", 30, encoder.encode("admin"), "ADMIN"));
     }
 }

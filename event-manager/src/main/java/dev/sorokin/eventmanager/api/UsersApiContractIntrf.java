@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Users",
         description = "User management endpoints")
 @RequestMapping("/users")
-public interface UsersApiContract {
+public interface UsersApiContractIntrf {
 
 
     /**

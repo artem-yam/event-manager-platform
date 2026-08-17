@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Locations",
         description = "Location CRUD and capacity constraints")
 @RequestMapping("/locations")
-public interface LocationApiContract {
+public interface LocationApiContractIntrf {
 
     /**
      * Получить список всех локаций

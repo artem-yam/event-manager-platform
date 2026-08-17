@@ -5,3 +5,7 @@ databaseChangeLog:
       file: db/changelog/changesets/0002-create-location.yaml
   - include:
       file: db/changelog/changesets/0002-create-user.yaml
+  - include:
+      file: db/changelog/changesets/0003-create-event.yaml
+  - include:
+      file: db/changelog/changesets/0003-create-registration.yaml
