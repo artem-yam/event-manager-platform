@@ -11,24 +11,19 @@ import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static dev.sorokin.eventmanager.validation.ValidationMessages.*;
+
 @Service
 @RequiredArgsConstructor
 @Setter
 public class UserService {
 
-    @Value("${validation.messages.user.not_found_by_id}")
-    private String USER_BY_ID_NOT_FOUND_MESSAGE;
-    @Value("${validation.messages.user.not_found_by_login}")
-    private String USER_BY_LOGIN_NOT_FOUND_MESSAGE;
-    @Value("${validation.messages.user.login_taken}")
-    private String LOGIN_TAKEN_MESSAGE;
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -49,7 +44,7 @@ public class UserService {
 
     public UserInfoDto register(UserRegistrationDto request) {
         if (userRepository.existsByLogin(request.getLogin())) {
-            throw new IllegalArgumentException(LOGIN_TAKEN_MESSAGE);
+            throw new IllegalArgumentException(LOGIN_TAKEN_MESSAGE.toString());
         }
 
         validationService.validateUser(request);
@@ -63,13 +58,13 @@ public class UserService {
 
     public UserInfoDto getUserById(Long userId) {
         var entity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(USER_BY_ID_NOT_FOUND_MESSAGE.formatted(userId)));
+                .orElseThrow(() -> new EntityNotFoundException(USER_BY_ID_NOT_FOUND_MESSAGE.toString().formatted(userId)));
         return userMapper.toDto(entity);
     }
 
     protected UserEntity getActiveUser() {
         var userLogin = jwtService.getCurrentUserLogin();
         return userRepository.findByLogin(userLogin)
-                .orElseThrow(() -> new EntityNotFoundException(USER_BY_LOGIN_NOT_FOUND_MESSAGE.formatted(userLogin)));
+                .orElseThrow(() -> new EntityNotFoundException(USER_BY_LOGIN_NOT_FOUND_MESSAGE.toString().formatted(userLogin)));
     }
 }

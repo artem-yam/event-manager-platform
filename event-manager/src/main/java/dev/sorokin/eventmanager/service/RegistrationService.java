@@ -7,11 +7,12 @@ import dev.sorokin.eventmanager.mapper.RegistrationMapper;
 import dev.sorokin.eventmanager.repository.RegistrationRepository;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static dev.sorokin.eventmanager.validation.ValidationMessages.REGISTRATION_ABSENT_FOR_EVENT_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,6 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final EventMapper eventMapper;
-    @Value("${validation.messages.registration.absent_for_event}")
-    private String REGISTRATION_ABSENT_FOR_EVENT_MESSAGE;
 
     @Transactional
     public void register(Long eventId) {
@@ -47,7 +46,7 @@ public class RegistrationService {
 
         var result = registrationRepository.deleteByUserAndEvent(activeUser, event);
         if (result == 0) {
-            throw new IllegalArgumentException(REGISTRATION_ABSENT_FOR_EVENT_MESSAGE);
+            throw new IllegalArgumentException(REGISTRATION_ABSENT_FOR_EVENT_MESSAGE.toString());
         }
     }
 

@@ -8,19 +8,16 @@ import dev.sorokin.eventmanager.repository.LocationRepository;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static dev.sorokin.eventmanager.validation.ValidationMessages.LOCATION_NOT_FOUND_MESSAGE;
+import static dev.sorokin.eventmanager.validation.ValidationMessages.LOCATION_WITH_EVENTS_MESSAGE;
+
 @Service
 @RequiredArgsConstructor
 public class LocationService {
-
-    @Value("${validation.messages.location.not_found}")
-    private String LOCATION_NOT_FOUND_MESSAGE;
-    @Value("${validation.messages.location.with_events}")
-    private String LOCATION_WITH_EVENTS_MESSAGE;
 
     private final LocationRepository locationRepository;
     private final LocationMapper locationMapper;
@@ -39,18 +36,18 @@ public class LocationService {
 
     public LocationDto getById(Long locationId) {
         var entity = locationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
         return locationMapper.toDto(entity);
     }
 
     protected LocationEntity getEntityById(Long locationId) {
         return locationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
     }
 
     public LocationDto update(Long locationId, LocationDto dto) {
         var entity = locationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
         validationService.validateLocation(countEventPlaces(entity.getEvents()), dto);
         locationMapper.updateEntity(entity, dto);
         locationRepository.save(entity);
@@ -63,9 +60,9 @@ public class LocationService {
 
     public void delete(Long locationId) {
         var entity = locationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
         if (!entity.getEvents().isEmpty()) {
-            throw new IllegalArgumentException(LOCATION_WITH_EVENTS_MESSAGE.formatted(locationId));
+            throw new IllegalArgumentException(LOCATION_WITH_EVENTS_MESSAGE.toString().formatted(locationId));
         }
 
         locationRepository.deleteById(locationId);
