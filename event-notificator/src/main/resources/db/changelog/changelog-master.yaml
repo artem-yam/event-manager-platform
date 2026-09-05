@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changesets/0001-create-notification-event-payload.yaml
+  - include:
+      file: db/changelog/changesets/0002-create-notification.yaml

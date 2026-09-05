@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-create-notification
+      author: artem-yam
+      changes:
+        - createTable:
+            tableName: notification
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_read
+                  type: BOOLEAN
+              - column:
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  name: read_at
+                  type: DATETIME
+              - column:
+                  name: payload_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: notification
+            baseColumnNames: payload_id
+            referencedTableName: notification_event_payload
+            referencedColumnNames: id
+            constraintName: fk_notification_to_payload

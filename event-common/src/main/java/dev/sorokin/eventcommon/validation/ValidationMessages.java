@@ -1,4 +1,4 @@
-package dev.sorokin.eventmanager.validation;
+package dev.sorokin.eventcommon.validation;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

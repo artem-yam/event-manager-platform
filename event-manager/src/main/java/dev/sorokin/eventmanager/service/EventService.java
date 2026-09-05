@@ -7,6 +7,7 @@ import dev.sorokin.eventmanager.dto.EventStatus;
 import dev.sorokin.eventmanager.entity.EventEntity;
 import dev.sorokin.eventmanager.mapper.EventMapper;
 import dev.sorokin.eventmanager.repository.EventRepository;
+import dev.sorokin.eventmanager.service.notification.NotificationService;
 import dev.sorokin.eventmanager.utils.SpecificationUtils;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +31,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
     private final LocationService locationService;
+    private final NotificationService notificationService;
 
     public EventDto create(EventRequestDto request) {
         var eventLocation = locationService.getEntityById(request.getLocationId());
@@ -57,8 +59,11 @@ public class EventService {
 
         validationService.validateEventOnUpdate(eventEntity, request, eventLocation, activeUser);
 
+        notificationService.notifyUpdate(eventEntity, request, activeUser.getId());
+
         eventMapper.updateEntity(eventEntity, request);
         eventRepository.save(eventEntity);
+
         return eventMapper.toDto(eventEntity);
     }
 
@@ -71,6 +76,8 @@ public class EventService {
         validationService.validateEventOnCancel(eventEntity, activeUser);
 
         eventEntity.setStatus(EventStatus.CANCELLED.toString());
+
+        notificationService.notifyDelete(eventEntity, activeUser.getId());
     }
 
     public List<EventDto> search(EventSearchRequestDto request) {
@@ -97,5 +104,21 @@ public class EventService {
     protected EventEntity getEntityById(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException(EVENT_NOT_FOUND_MESSAGE.formatted(eventId)));
+    }
+
+    @Transactional
+    public List<EventEntity> startEvents() {
+        var eventsToStart = eventRepository.getEventsToStart();
+        eventsToStart.forEach(event -> event.setStatus(EventStatus.STARTED.toString()));
+        eventRepository.saveAll(eventsToStart);
+        return eventsToStart;
+    }
+
+    @Transactional
+    public List<EventEntity> finishEvents() {
+        var eventsToFinish = eventRepository.getEventsToFinish();
+        eventsToFinish.forEach(event -> event.setStatus(EventStatus.FINISHED.toString()));
+        eventRepository.saveAll(eventsToFinish);
+        return eventsToFinish;
     }
 }
