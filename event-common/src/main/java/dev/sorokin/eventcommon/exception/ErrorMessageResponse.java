@@ -1,4 +1,4 @@
-package dev.sorokin.eventmanager.exception;
+package dev.sorokin.eventcommon.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

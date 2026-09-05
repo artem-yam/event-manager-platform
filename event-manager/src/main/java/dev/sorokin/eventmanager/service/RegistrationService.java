@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static dev.sorokin.eventmanager.validation.ValidationMessages.REGISTRATION_ABSENT_FOR_EVENT_MESSAGE;
+import static dev.sorokin.eventcommon.validation.ValidationMessages.REGISTRATION_ABSENT_FOR_EVENT_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
