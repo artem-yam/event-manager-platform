@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static dev.sorokin.eventmanager.validation.ValidationMessages.LOCATION_NOT_FOUND_MESSAGE;
-import static dev.sorokin.eventmanager.validation.ValidationMessages.LOCATION_WITH_EVENTS_MESSAGE;
+import static dev.sorokin.eventcommon.validation.ValidationMessages.LOCATION_NOT_FOUND_MESSAGE;
+import static dev.sorokin.eventcommon.validation.ValidationMessages.LOCATION_WITH_EVENTS_MESSAGE;
 
 @Service
 @RequiredArgsConstructor

@@ -1,10 +1,10 @@
 package dev.sorokin.eventmanager.api;
 
+import dev.sorokin.eventcommon.exception.ErrorMessageResponse;
 import dev.sorokin.eventmanager.dto.JwtResponse;
 import dev.sorokin.eventmanager.dto.UserCredentialsDto;
 import dev.sorokin.eventmanager.dto.UserInfoDto;
 import dev.sorokin.eventmanager.dto.UserRegistrationDto;
-import dev.sorokin.eventmanager.exception.ErrorMessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

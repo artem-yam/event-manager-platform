@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static dev.sorokin.eventmanager.validation.ValidationMessages.*;
+import static dev.sorokin.eventcommon.validation.ValidationMessages.*;
 
 @Component
 @NoArgsConstructor

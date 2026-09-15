@@ -1,0 +1,49 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: event-notificator
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/event_manager
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.yaml
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: event-notificator
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "*"
+    notification-topic: "notification-topic"
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+springdoc:
+  swagger-ui:
+    path: /index.html
+    tryItOutEnabled: true
+    persistAuthorization: true
+    withCredentials: true
+
+jwt:
+  key: 'd878fede59078e89bcf10c2c5eb43d760c426035362af8caa237eda1671e14e0'

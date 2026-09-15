@@ -20,6 +20,19 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.yaml
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: event-notificator
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "*"
+    notification-topic: "notification-topic"
+
 logging:
   level:
     root: INFO
@@ -28,7 +41,6 @@ logging:
 springdoc:
   swagger-ui:
     path: /index.html
-    #url: openapi/event-manager-openapi.yaml
     tryItOutEnabled: true
     persistAuthorization: true
     withCredentials: true

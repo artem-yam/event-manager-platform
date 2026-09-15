@@ -1,5 +1,6 @@
 package dev.sorokin.eventmanager.entity;
 
+import dev.sorokin.eventmanager.dto.EventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,5 +57,14 @@ public class EventEntity {
             orphanRemoval = true
     )
     private List<RegistrationEntity> registrations = new ArrayList<>();
+
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setStatus(EventStatus newStatus) {
+        this.status = newStatus.name();
+    }
 
 }

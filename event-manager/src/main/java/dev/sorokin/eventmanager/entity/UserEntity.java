@@ -1,6 +1,10 @@
 package dev.sorokin.eventmanager.entity;
 
-import jakarta.persistence.*;
+import dev.sorokin.eventcommon.user.UserBaseEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,30 +19,11 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "user_account")
-public class UserEntity {
+public class UserEntity extends UserBaseEntity {
 
     public UserEntity(String login, Integer age, String passwordHash, String role) {
-        this.login = login;
-        this.age = age;
-        this.passwordHash = passwordHash;
-        this.role = role;
+        super(login, age, passwordHash, role);
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
-
-    @Column(name = "age", nullable = false)
-    private Integer age;
-
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
-
-    @Column(name = "role", nullable = false)
-    private String role;
 
     @OneToMany(
             mappedBy = "user",
