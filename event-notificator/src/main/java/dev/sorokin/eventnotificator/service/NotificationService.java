@@ -7,14 +7,15 @@ import dev.sorokin.eventnotificator.mapper.NotificationMapper;
 import dev.sorokin.eventnotificator.repository.NotificationEventPayloadRepository;
 import dev.sorokin.eventnotificator.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -40,14 +41,9 @@ public class NotificationService {
 
     @Transactional
     public void markNotificationsAsRead(MarkNotificationsAsReadRequest request) {
-        var userId = userService.getActiveUser().getId();
-        var userNotifications = notificationRepository.getAllByUserIdAndIsReadFalse(userId);
-        userNotifications.stream()
-                .filter(notification -> request.getNotificationIds().contains(notification.getId()))
-                .forEach(notification -> {
-                    notification.setRead(true);
-                    notification.setReadAt(LocalDateTime.now());
-                });
+        var user = userService.getActiveUser();
+        var readNotificationsCount = notificationRepository.markAsRead(user.getId(), request.getNotificationIds());
+        log.info("Пользователь {} прочитал нотификации в количестве: {}", user.getLogin(), readNotificationsCount);
     }
 
 }

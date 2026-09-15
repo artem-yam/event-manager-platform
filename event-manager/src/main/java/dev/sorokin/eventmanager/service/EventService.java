@@ -109,7 +109,7 @@ public class EventService {
     @Transactional
     public List<EventEntity> startEvents() {
         var eventsToStart = eventRepository.getEventsToStart();
-        eventsToStart.forEach(event -> event.setStatus(EventStatus.STARTED.toString()));
+        eventsToStart.forEach(event -> event.setStatus(EventStatus.STARTED));
         eventRepository.saveAll(eventsToStart);
         return eventsToStart;
     }
@@ -117,7 +117,7 @@ public class EventService {
     @Transactional
     public List<EventEntity> finishEvents() {
         var eventsToFinish = eventRepository.getEventsToFinish();
-        eventsToFinish.forEach(event -> event.setStatus(EventStatus.FINISHED.toString()));
+        eventsToFinish.forEach(event -> event.setStatus(EventStatus.FINISHED));
         eventRepository.saveAll(eventsToFinish);
         return eventsToFinish;
     }
