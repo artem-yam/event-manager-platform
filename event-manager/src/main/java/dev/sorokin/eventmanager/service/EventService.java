@@ -12,6 +12,8 @@ import dev.sorokin.eventmanager.utils.SpecificationUtils;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +47,19 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
+    @Cacheable(
+            cacheNames = "events",
+            key = "#eventId"
+    )
     public EventDto getById(Long eventId) {
         var entity = getEntityById(eventId);
         return eventMapper.toDto(entity);
     }
 
+    @CacheEvict(
+            cacheNames = "events",
+            allEntries = true
+    )
     @Transactional
     public EventDto update(Long eventId, EventRequestDto request) {
         var eventEntity = getEntityById(eventId);
@@ -67,6 +77,10 @@ public class EventService {
         return eventMapper.toDto(eventEntity);
     }
 
+    @CacheEvict(
+            cacheNames = "events",
+            allEntries = true
+    )
     @Transactional
     public void delete(Long eventId) {
         var eventEntity = getEntityById(eventId);
@@ -106,6 +120,10 @@ public class EventService {
                 .orElseThrow(() -> new EntityNotFoundException(EVENT_NOT_FOUND_MESSAGE.formatted(eventId)));
     }
 
+    @CacheEvict(
+            cacheNames = "events",
+            allEntries = true
+    )
     @Transactional
     public List<EventEntity> startEvents() {
         var eventsToStart = eventRepository.getEventsToStart();
@@ -114,6 +132,10 @@ public class EventService {
         return eventsToStart;
     }
 
+    @CacheEvict(
+            cacheNames = "events",
+            allEntries = true
+    )
     @Transactional
     public List<EventEntity> finishEvents() {
         var eventsToFinish = eventRepository.getEventsToFinish();

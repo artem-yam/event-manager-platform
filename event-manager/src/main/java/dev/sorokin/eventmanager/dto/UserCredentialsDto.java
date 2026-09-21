@@ -2,17 +2,21 @@ package dev.sorokin.eventmanager.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserCredentialsDto {
 
     @NotBlank
     @Schema(description = "Логин пользователя для авторизации", example = "test_user")
-    String login;
+    private String login;
 
     @NotBlank
     @Schema(description = "Пароль пользователя", example = "test_password")
-    String password;
+    private String password;
 
 }

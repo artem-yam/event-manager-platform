@@ -8,7 +8,10 @@ import dev.sorokin.eventmanager.repository.LocationRepository;
 import dev.sorokin.eventmanager.validation.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,10 +26,18 @@ public class LocationService {
     private final LocationMapper locationMapper;
     private final ValidationService validationService;
 
+    @Cacheable(
+            cacheNames = "locations",
+            key = "'all'"
+    )
     public List<LocationDto> getAll() {
         return locationMapper.toDtoList(locationRepository.findAll());
     }
 
+    @CacheEvict(
+            cacheNames = "locations",
+            allEntries = true
+    )
     public LocationDto create(LocationDto dto) {
         validationService.validateLocation(dto);
         var entity = locationMapper.createEntity(dto);
@@ -34,6 +45,10 @@ public class LocationService {
         return locationMapper.toDto(saved);
     }
 
+    @Cacheable(
+            cacheNames = "locations",
+            key = "#locationId"
+    )
     public LocationDto getById(Long locationId) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
@@ -45,6 +60,11 @@ public class LocationService {
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
     }
 
+    @CacheEvict(
+            cacheNames = "locations",
+            allEntries = true
+    )
+    @Transactional
     public LocationDto update(Long locationId, LocationDto dto) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));
@@ -58,6 +78,11 @@ public class LocationService {
         return events.stream().mapToInt(EventEntity::getMaxPlaces).sum();
     }
 
+    @CacheEvict(
+            cacheNames = "locations",
+            allEntries = true
+    )
+    @Transactional
     public void delete(Long locationId) {
         var entity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(LOCATION_NOT_FOUND_MESSAGE.toString().formatted(locationId)));

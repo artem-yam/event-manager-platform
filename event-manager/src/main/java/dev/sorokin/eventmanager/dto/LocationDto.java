@@ -5,28 +5,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * DTO for {@link LocationEntity}
  */
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LocationDto {
 
     @NotBlank
     @Schema(description = "Имя локации", example = "КТ Октябрь")
-    String name;
+    private String name;
 
     @NotBlank
     @Schema(description = "Адрес локации", example = "улица Пушкина")
-    String address;
+    private String address;
 
     @NotNull
     @Min(5)
     @Schema(description = "Вместительность локации", example = "1000")
-    Integer capacity;
+    private Integer capacity;
 
     @Schema(description = "Дополнительное описание локации", example = "Тестовое описание")
-    String description;
+    private String description;
 
 }
