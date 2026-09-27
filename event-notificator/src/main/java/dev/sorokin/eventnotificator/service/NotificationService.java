@@ -1,6 +1,7 @@
 package dev.sorokin.eventnotificator.service;
 
 import dev.sorokin.eventcommon.kafka.EventChangeKafkaMessage;
+import dev.sorokin.eventnotificator.cache.CustomRedisTemplate;
 import dev.sorokin.eventnotificator.dto.MarkNotificationsAsReadRequest;
 import dev.sorokin.eventnotificator.dto.NotificationResponse;
 import dev.sorokin.eventnotificator.mapper.NotificationMapper;
@@ -22,6 +23,7 @@ public class NotificationService {
     private final NotificationEventPayloadRepository notificationEventPayloadRepository;
     private final NotificationMapper notificationMapper;
     private final UserService userService;
+    private final CustomRedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public void save(EventChangeKafkaMessage msg) {
@@ -30,6 +32,10 @@ public class NotificationService {
 
         var notificationEntities = notificationMapper.createEntities(payloadEntity, msg.getSubscribers());
         notificationRepository.saveAll(notificationEntities);
+
+        for (var notif : notificationEntities) {
+            redisTemplate.opsForValue().increment("notif:unread:%s".formatted(notif.getUserId()));
+        }
     }
 
     @Transactional(readOnly = true)
@@ -44,6 +50,9 @@ public class NotificationService {
         var user = userService.getActiveUser();
         var readNotificationsCount = notificationRepository.markAsRead(user.getId(), request.getNotificationIds());
         log.info("Пользователь {} прочитал нотификации в количестве: {}", user.getLogin(), readNotificationsCount);
+
+        long userUndeadNotifications = notificationRepository.countByUserIdAndIsReadIsFalse(user.getId());
+        redisTemplate.opsForValue().set("notif:unread:%s".formatted(user.getId()), Long.toString(userUndeadNotifications));
     }
 
 }

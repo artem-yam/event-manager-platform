@@ -16,4 +16,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "WHERE n.userId = :userId AND n.isRead is false AND n.id IN :notificationIds")
     int markAsRead(Long userId, List<Long> notificationIds);
 
+    long countByUserIdAndIsReadIsFalse(Long userId);
+
 }
